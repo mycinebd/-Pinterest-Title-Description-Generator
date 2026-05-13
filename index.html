@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Safe Movie Pinterest Generator</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#0f172a;
+    color:white;
+    padding:30px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    background:#111827;
+    padding:25px;
+    border-radius:20px;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+    font-size:32px;
+}
+
+textarea{
+    width:100%;
+    height:160px;
+    background:#1e293b;
+    border:none;
+    border-radius:12px;
+    padding:15px;
+    color:white;
+    font-size:16px;
+    resize:none;
+    outline:none;
+}
+
+button{
+    width:100%;
+    margin-top:15px;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    background:#ef4444;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#dc2626;
+}
+
+.output{
+    margin-top:25px;
+}
+
+.card{
+    background:#1e293b;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:20px;
+}
+
+.card h3{
+    color:#f87171;
+    margin-bottom:15px;
+}
+
+.copyBtn{
+    background:#22c55e;
+}
+
+.copyBtn:hover{
+    background:#16a34a;
+}
+
+.tag{
+    display:inline-block;
+    background:#334155;
+    padding:6px 10px;
+    border-radius:8px;
+    margin:4px;
+    font-size:14px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>🎬 Safe Pinterest Movie Generator</h1>
+
+    <textarea id="movieInput" placeholder="Enter movie names...
+Example:
+
+Interstellar
+John Wick
+The Dark Knight"></textarea>
+
+    <button onclick="generateContent()">
+        Generate Pinterest Content
+    </button>
+
+    <div class="output" id="output"></div>
+
+</div>
+
+<script>
+
+const safeTitles = [
+
+    "Where To Watch {movie} In 2026",
+    "Best Streaming Guide For {movie}",
+    "{movie} Watchlist & Streaming Info",
+    "Why Movie Fans Love {movie}",
+    "Top Reasons To Watch {movie}",
+    "{movie} Review & Fan Reactions",
+    "Movies Similar To {movie}",
+    "Best Movies Like {movie}",
+    "Trending Movie Pick: {movie}",
+    "{movie} Movie Guide For Fans"
+
+];
+
+const safeCaptions = [
+
+    "🎬 Looking for movies like {movie}? Explore trending cinema recommendations and binge-watch inspiration.",
+
+    "🍿 Discover where movie lovers are streaming and discussing {movie} this year.",
+
+    "🔥 Save this pin for your next movie night. {movie} fans will love these entertainment picks.",
+
+    "📺 Explore movie guides, streaming discussions, and cinema recommendations inspired by {movie}.",
+
+    "🎥 Find your next watchlist favorite after watching {movie}.",
+
+    "❤️ Movie lovers are adding {movie} to their binge-watch list. Save this inspiration now."
+
+];
+
+const hashtags = [
+
+    "#MovieRecommendations",
+    "#CinemaLovers",
+    "#Watchlist",
+    "#TrendingMovies",
+    "#MovieNight",
+    "#Entertainment",
+    "#FilmFans",
+    "#BingeWatch",
+    "#StreamingGuide"
+
+];
+
+function random(arr){
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generateContent(){
+
+    const input = document.getElementById("movieInput").value.trim();
+
+    if(!input){
+        alert("Please enter movie names.");
+        return;
+    }
+
+    const movies = input.split("\n");
+
+    const output = document.getElementById("output");
+
+    output.innerHTML = "";
+
+    movies.forEach(movie => {
+
+        const cleanMovie = movie.trim();
+
+        if(cleanMovie === "") return;
+
+        const title = random(safeTitles)
+        .replaceAll("{movie}", cleanMovie);
+
+        const caption = random(safeCaptions)
+        .replaceAll("{movie}", cleanMovie);
+
+        const randomTags = hashtags
+            .sort(() => 0.5 - Math.random())
+            .slice(0,5);
+
+        const card = document.createElement("div");
+
+        card.className = "card";
+
+        card.innerHTML = `
+
+            <h3>${cleanMovie}</h3>
+
+            <p>
+                <strong>📌 Pinterest Title:</strong><br><br>
+                ${title}
+            </p>
+
+            <br>
+
+            <p>
+                <strong>📝 Caption:</strong><br><br>
+                ${caption}
+            </p>
+
+            <br>
+
+            <div>
+                <strong>🏷️ Hashtags:</strong><br><br>
+
+                ${randomTags.map(tag =>
+                    `<span class="tag">${tag}</span>`
+                ).join("")}
+
+                <span class="tag">
+                    #${cleanMovie.replaceAll(" ","")}
+                </span>
+
+            </div>
+
+            <button class="copyBtn" onclick="copyContent(this)">
+                Copy Content
+            </button>
+
+        `;
+
+        output.appendChild(card);
+
+    });
+
+}
+
+function copyContent(btn){
+
+    const text = btn.parentElement.innerText;
+
+    navigator.clipboard.writeText(text);
+
+    btn.innerText = "Copied ✅";
+
+    setTimeout(() => {
+
+        btn.innerText = "Copy Content";
+
+    }, 2000);
+
+}
+
+</script>
+
+</body>
+</html>
